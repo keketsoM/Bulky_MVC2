@@ -355,19 +355,19 @@ sup {
     top: -0.5em;
 }
 
-a {
+/*a {
     color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
     text-decoration: underline;
-}
+}*/
 
-    a:hover {
+/* a:hover {
         --bs-link-color-rgb: var(--bs-link-hover-color-rgb);
-    }
+    }*/
 
-    a:not([href]):not([class]), a:not([href]):not([class]):hover {
-        color: inherit;
-        text-decoration: none;
-    }
+/*a:not([href]):not([class]), a:not([href]):not([class]):hover {
+    color: inherit;
+    text-decoration: none;
+}*/
 
 pre,
 code,

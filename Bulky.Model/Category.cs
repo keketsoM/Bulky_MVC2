@@ -14,5 +14,7 @@ namespace Bulky.Model
         [DisplayName("Display Order")]
         [Range(0, 100)]
         public int DisplayOrder { get; set; }
+
+  
     }
 }

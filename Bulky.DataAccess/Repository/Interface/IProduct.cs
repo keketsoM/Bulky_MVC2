@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Bulky.DataAccess.Repository.Interface
 {
-    public interface IUnitOfWork
+    public interface IProduct : IRepository<Product>
     {
-        ICategory CategoryRepo { get; }
-        IProduct ProductRepo { get; }
-        void save();
+
+        void Update(Product product);
     }
 }

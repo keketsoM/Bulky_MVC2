@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Product>
+<partial name="_Notification" />
+<div class="card shadow border-0 mt-4 mb-5  rounded">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Product List</</h2>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6 text-end mb-3">
+            </div>
+            <div class="col-6 text-end mb-3">
+                <a asp-controller="Product" asp-action="Upsert" class="btn btn-outline-dark"><i class="bi bi-plus-circle-fill"></i>Create Category</a>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-borderless">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        Title
+
+                    </th>
+                    <th class="text-center">
+                        ISBN
+                    </th>
+
+                    <th class="text-center">
+                        ListPrice
+                    </th>
+
+                    <th class="text-center">
+                        Category
+                    </th>
+                     <th class="text-center">
+
+                    </th> 
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var products in Model.OrderBy(c => c.Author))
+                {
+
+                    <tr class="table-striped-columns">
+                        <td class="text-center">
+                            @products.Title
+                        </td>
+                        <td class="text-center">
+                            @products.ISBN
+                        </td>
+
+                        <td class="text-center">
+                            @products.ListPrice
+                        </td>
+                        <td class="text-center">
+                            @products.Category.Name
+                        </td>
+                       
+                        <td>
+                            <div class=row>
+                                <div class="col-4">
+                                    <a class="btn btn-outline-primary w-100 rounded" asp-controller="Product" asp-action="Detail" asp-route-id="@products.Id" style="width:100px"><i class="bi bi-eye-fill"></i>Detail</a>
+                                </div>
+                                <div class="col-4">
+                                    <a class="btn btn-outline-secondary w-100 rounded" asp-controller="Product" asp-action="Upsert" asp-route-id="@products.Id" style="width:100px"><i class="bi bi-pencil-square"></i>Edit</a>
+                                </div>
+                                <div class="col-4">
+                                    <a class="btn btn-outline-danger w-100  rounded" asp-controller="Product" asp-action="Delete" asp-route-id="@products.Id" style="width:100px"><i class="bi bi-trash3-fill"></i>Delete</a>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
