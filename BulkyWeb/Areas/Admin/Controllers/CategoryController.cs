@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repository.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Bulky.Utility;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
 
     [Area("Admin")]
+    // [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -63,7 +66,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             }
             else
             {
-                
+
                 var category = _unitOfWork.CategoryRepo.Get(p => p.CategoryId == id);
                 return View(category);
             }

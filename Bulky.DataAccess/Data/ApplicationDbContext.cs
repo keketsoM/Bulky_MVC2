@@ -1,10 +1,12 @@
 ﻿
 using Bulky.Model;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bulky.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -13,9 +15,14 @@ namespace Bulky.DataAccess.Data
         }
         public DbSet<Category> categories { get; set; }
         public DbSet<Product> products { get; set; }
+        public DbSet<ApplicationUser> applicationUsers { get; set; }
+        public DbSet<Company> companys { get; set; }
 
+        public DbSet<ShoppingCart> shoppingCarts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
 
 
             modelBuilder.Entity<Category>().HasData(
@@ -23,6 +30,12 @@ namespace Bulky.DataAccess.Data
                 new Category { CategoryId = 2, Name = "Drama", DisplayOrder = 2 },
                 new Category { CategoryId = 3, Name = "Horror", DisplayOrder = 3 }
                 );
+
+            modelBuilder.Entity<Company>().HasData(
+               new Company { Id = 1, Name = "Ma k", StreetAddress = "147 moloi street", City = "Free State", PostalCode = "9450", State = "Free State", PhoneNumber = "065 855 9065" },
+               new Company { Id = 2, Name = "keke", StreetAddress = "147 keke street", City = "Free State", PostalCode = "9450", State = "Free State", PhoneNumber = "065 855 9065" },
+               new Company { Id = 3, Name = "keketso", StreetAddress = "147 keketso street", City = "Free State", PostalCode = "9450", State = "Free State", PhoneNumber = "065 855 9065" }
+               );
 
             modelBuilder.Entity<Product>().HasData(
              new Product
@@ -37,7 +50,7 @@ namespace Bulky.DataAccess.Data
                  Price50 = 85,
                  Price100 = 80,
                  CategoryId = 1,
-                 ImageUrl=""
+                 ImageUrl = ""
 
              },
                 new Product

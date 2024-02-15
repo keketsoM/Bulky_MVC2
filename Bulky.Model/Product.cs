@@ -14,14 +14,14 @@ namespace Bulky.Model
         [Key]
         public int Id { get; set; }
         [Required]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Required]
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = string.Empty;
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         [Required]
-        public string Author { get; set; }
+        public string Author { get; set; }=string.Empty;
         [Required]
         [Display(Name = "List Price")]
         [Range(1, 1000)]
@@ -42,7 +42,7 @@ namespace Bulky.Model
         [Range(1, 1000)]
         public double Price100 { get; set; }
         [ValidateNever]
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; }= string.Empty; 
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         [ValidateNever]

@@ -1,6 +1,8 @@
 ﻿using Bulky.DataAccess.Repository.Interface;
 using Bulky.Model;
 using Bulky.Model.ViewModel;
+using Bulky.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -8,7 +10,9 @@ using System.Drawing;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
+
     [Area("Admin")]
+    // [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
 
@@ -17,39 +21,40 @@ namespace BulkyWeb.Areas.Admin.Controllers
         public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
-            _webHostEnvironment = webHostEnvironment;   
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
-            var listProduct = _unitOfWork.ProductRepo.GetAll(includeProperties:"Category").ToList();
+            var listProduct = _unitOfWork.ProductRepo.GetAll(includeProperties: "Category").ToList();
             return View(listProduct);
         }
         [HttpGet]
         public IActionResult Upsert(int? id)
         {
-           
-            IEnumerable<SelectListItem> categoryList=_unitOfWork.CategoryRepo.GetAll().Select(u=>new SelectListItem
-           {
-               Text = u.Name,
-               Value=u.CategoryId.ToString()
-           });
-            ProductVM productvm = new() {
+
+            IEnumerable<SelectListItem> categoryList = _unitOfWork.CategoryRepo.GetAll().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.CategoryId.ToString()
+            });
+            ProductVM productvm = new()
+            {
                 categoryList = categoryList,
                 product = new() { }
             };
-            
+
             if (id == null || id == 0)
             {
-                return View(productvm); 
+                return View(productvm);
             }
             else
             {
-                 productvm.product = _unitOfWork.ProductRepo.Get(p => p.Id == id);
+                productvm.product = _unitOfWork.ProductRepo.Get(p => p.Id == id);
                 return View(productvm);
             }
 
             // ViewBag.CategoryList = categoryList;   
-          //  return View(product);
+            //  return View(product);
         }
         [HttpPost]
         public IActionResult Upsert(ProductVM productvm, IFormFile? file)
@@ -67,11 +72,11 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
                     if (file != null)
                     {
-                       string productName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                       string productPath = Path.Combine(wwwRootPath,@"images\product");
+                        string productName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string productPath = Path.Combine(wwwRootPath, @"images\product");
                         if (!string.IsNullOrEmpty(productvm.product.ImageUrl))
                         {
-                            var oldImagePath = Path.Combine(wwwRootPath,productvm.product.ImageUrl.TrimStart('\\'));
+                            var oldImagePath = Path.Combine(wwwRootPath, productvm.product.ImageUrl.TrimStart('\\'));
                             if (System.IO.File.Exists(oldImagePath))
                             {
                                 System.IO.File.Delete(oldImagePath);
@@ -91,7 +96,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     {
                         _unitOfWork.ProductRepo.Update(productvm.product);
                     }
-                  
+
                     _unitOfWork.save();
                     TempData["Success"] = "Category created successfully";
                 }
@@ -102,15 +107,15 @@ namespace BulkyWeb.Areas.Admin.Controllers
                         Text = u.Name,
                         Value = u.CategoryId.ToString()
                     });
-                  
-                    return View("Create",productvm);
+
+                    return View("Create", productvm);
                 }
 
 
             }
             return RedirectToAction("Index");
         }
-      
+
 
         public ActionResult Detail(int id)
         {
