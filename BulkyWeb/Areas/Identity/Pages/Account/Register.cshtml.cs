@@ -111,14 +111,11 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            public string role { get; set; }
+            public string Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> roleList { get; set; }
 
-            public int CompanyId { get; set; }
-            [ForeignKey("CompanyId")]
-            [ValidateNever]
-            public IEnumerable<SelectListItem> CompanyList { get; set; }
+
             [Required]
             public string Name { get; set; }
             public string? StreetAddress { get; set; }
@@ -126,6 +123,10 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             public string? State { get; set; }
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
+            public int? CompanyId { get; set; }
+            [ForeignKey("CompanyId")]
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
 
         }
 
@@ -145,14 +146,12 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 {
                     Text = x,
                     Value = x
-
                 }),
 
                 CompanyList = _unitOfWork.CompanyRepo.GetAll().Select(x => new SelectListItem
                 {
                     Text = x.Name,
-                    Value = x.Id.ToString(),
-
+                    Value = x.CompanyId.ToString()
                 })
             };
             ReturnUrl = returnUrl;
@@ -165,6 +164,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -176,7 +176,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 user.PostalCode = Input.PostalCode;
                 user.State = Input.State;
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                if (Input.role == SD.Role_Company)
+                if (Input.Role == SD.Role_Company)
                 {
                     user.CompanyId = Input.CompanyId;
                 }
@@ -185,9 +185,9 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 {
 
                     _logger.LogInformation("User created a new account with password.");
-                    if (!string.IsNullOrEmpty(Input.role))
+                    if (!string.IsNullOrEmpty(Input.Role))
                     {
-                        _userManager.AddToRoleAsync(user, Input.role).GetAwaiter().GetResult();
+                        _userManager.AddToRoleAsync(user, Input.Role).GetAwaiter().GetResult();
                     }
                     else
                     {
@@ -218,6 +218,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
+
                 }
             }
 

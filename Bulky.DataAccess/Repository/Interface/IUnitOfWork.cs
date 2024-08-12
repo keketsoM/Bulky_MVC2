@@ -12,6 +12,8 @@ namespace Bulky.DataAccess.Repository.Interface
         ICompany CompanyRepo { get; }
         ICategory CategoryRepo { get; }
         IProduct ProductRepo { get; }
+        IApplicationUser UserRepo { get; }
+        IShoppingCart ShoppingCartRepo { get; }
         void save();
     }
 }

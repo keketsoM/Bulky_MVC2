@@ -12,7 +12,7 @@ namespace Bulky.Model
     public class Company
     {
         [Key]
-        public int Id { get; set; }
+        public int CompanyId { get; set; }
         [Required]
         public string Name { get; set; }
         public string StreetAddress { get; set; }

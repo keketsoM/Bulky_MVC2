@@ -18,6 +18,9 @@ namespace Bulky.DataAccess.Repository
             CategoryRepo = new CategoryRepository(_context);
             ProductRepo = new ProductRepository(_context);
             CompanyRepo = new CompanyRepository(_context);
+            ShoppingCartRepo = new ShoppingCartRepository(_context);
+            UserRepo = new ApplicationUserRepository(_context);
+
         }
 
         public ICategory CategoryRepo
@@ -33,6 +36,18 @@ namespace Bulky.DataAccess.Repository
         }
 
         public ICompany CompanyRepo
+        {
+            get;
+            private set;
+        }
+
+        public IShoppingCart ShoppingCartRepo
+        {
+            get;
+            private set;
+        }
+
+        public IApplicationUser UserRepo
         {
             get;
             private set;

@@ -11,6 +11,7 @@ namespace Bulky.Model
 {
     public class ShoppingCart
     {
+        [Key]
         public int Id { get; set; }
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
@@ -18,8 +19,9 @@ namespace Bulky.Model
         public Product product { get; set; }
         [Range(0, 1000, ErrorMessage = "Please enter a value between 1 and 1000")]
         public int Quantity { get; set; }
-
-        public int ApplicationUserId { get; set; }
+        [NotMapped]
+        public double Total;
+        public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         [ValidateNever]
         public ApplicationUser applicationUser { get; set; }

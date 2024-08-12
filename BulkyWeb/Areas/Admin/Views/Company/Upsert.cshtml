@@ -5,14 +5,14 @@
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">@(Model.Id==0?"Create":"Edit") Company</h2>
+                <h2 class="text-white py-2">@(Model.CompanyId == 0 ? "Create" : "Edit") Company</h2>
 
             </div>
         </div>
     </div>
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
-            <input asp-for="@Model.Id" hidden />
+            <input asp-for="@Model.CompanyId" hidden />
             <div class="row">
                 <div class="col-12">
                     <div class="border p-3">
@@ -50,7 +50,7 @@
                         </div>
                         <div class="row">
                             <div class="col-6  col-md-3">
-                                <button asp-controller="Company" asp-action="Upsert" class="btn btn-outline-primary form-control" type="submit">@(Model.Id == 0 ? "Create" : "Update")</button>
+                                <button asp-controller="Company" asp-action="Upsert" class="btn btn-outline-primary form-control" type="submit">@(Model.CompanyId == 0 ? "Create" : "Update")</button>
                             </div>
                             <div class="col-6  col-md-3">
                                 <a asp-controller="Company" asp-action="index" class="btn btn-outline-secondary form-control">Back to List</a>

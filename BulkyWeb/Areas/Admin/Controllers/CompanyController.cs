@@ -39,7 +39,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             }
             else
             {
-                companyObj = _unitOfWork.CompanyRepo.Get(p => p.Id == id);
+                companyObj = _unitOfWork.CompanyRepo.Get(p => p.CompanyId == id);
                 return View(companyObj);
             }
 
@@ -51,7 +51,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (companyObj.Id == 0)
+                if (companyObj.CompanyId == 0)
                 {
                     _unitOfWork.CompanyRepo.Add(companyObj);
                 }
@@ -80,7 +80,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             }
             else
             {
-                var company = _unitOfWork.CompanyRepo.Get(p => p.Id == id);
+                var company = _unitOfWork.CompanyRepo.Get(p => p.CompanyId == id);
                 if (company == null)
                 {
                     NotFound();

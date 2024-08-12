@@ -2,8 +2,10 @@
 using Bulky.DataAccess.Repository;
 using Bulky.DataAccess.Repository.Interface;
 using Bulky.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BulkyWeb.Areas.Customer.Controllers
 {
@@ -15,20 +17,39 @@ namespace BulkyWeb.Areas.Customer.Controllers
         public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
-            _unitOfWork = unitOfWork; 
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var products = _unitOfWork.ProductRepo.GetAll(includeProperties:"Category").ToList();
+            var products = _unitOfWork.ProductRepo.GetAll(includeProperties: "Category").ToList();
 
             return View(products);
         }
 
         public IActionResult Detail(int id)
         {
-            var product = _unitOfWork.ProductRepo.Get(u=>u.Id==id,includeProperties:"Category");
-            return View(product);
+            ShoppingCart shoppingCart = new ShoppingCart()
+            {
+                product = _unitOfWork.ProductRepo.Get(p => p.Id == id, includeProperties: "Category"),
+                Quantity = 1,
+                ProductId = id,
+            };
+            return View(shoppingCart);
+        }
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+            _unitOfWork.ShoppingCartRepo.Add(shoppingCart);
+            _unitOfWork.save();
+
+            return View();
+
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

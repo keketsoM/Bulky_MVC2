@@ -40,7 +40,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
             ProductVM productvm = new()
             {
                 categoryList = categoryList,
-                product = new() { }
             };
 
             if (id == null || id == 0)
