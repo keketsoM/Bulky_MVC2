@@ -31,7 +31,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
         {
             ShoppingCart shoppingCart = new ShoppingCart()
             {
-                product = _unitOfWork.ProductRepo.Get(p => p.Id == id, includeProperties: "Category"),
+                Product = _unitOfWork.ProductRepo.Get(p => p.Id == id, includeProperties: "Category"),
                 Quantity = 1,
                 ProductId = id,
             };
@@ -44,10 +44,23 @@ namespace BulkyWeb.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             shoppingCart.ApplicationUserId = userId;
-            _unitOfWork.ShoppingCartRepo.Add(shoppingCart);
-            _unitOfWork.save();
+            ShoppingCart cartDb = _unitOfWork.ShoppingCartRepo.Get(
+                u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId
+            );
+            if (cartDb != null)
+            {
+                cartDb.Quantity += shoppingCart.Quantity;
+                _unitOfWork.ShoppingCartRepo.Update(cartDb);
+            }
+            else
+            {
+                _unitOfWork.ShoppingCartRepo.Add(shoppingCart);
+            }
 
-            return View();
+
+            _unitOfWork.save();
+            TempData["Success"] = "Item add to Cart successfully";
+            return RedirectToAction(nameof(Index));
 
 
         }

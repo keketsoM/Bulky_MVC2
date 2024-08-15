@@ -1,4 +1,9 @@
 ﻿@model IEnumerable<Product>
+@if(TempData["Success"] != null)
+{
+    <partial name="_Notification" />
+})
+
 <div class="row pb-3">
     @foreach(var products  in Model )
     {

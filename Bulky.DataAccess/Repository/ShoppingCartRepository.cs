@@ -19,9 +19,9 @@ namespace Bulky.DataAccess.Repository
             _context = context;
         }
 
-        public void Update(ShoppingCartRepository shoppingcart)
+        public void Update(ShoppingCart shoppingcart)
         {
-            throw new NotImplementedException();
+            _context.shoppingCarts.Update(shoppingcart);
         }
 
 

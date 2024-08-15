@@ -16,14 +16,16 @@ namespace Bulky.Model
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
         [ValidateNever]
-        public Product product { get; set; }
+        public Product Product { get; set; }
         [Range(0, 1000, ErrorMessage = "Please enter a value between 1 and 1000")]
         public int Quantity { get; set; }
-        [NotMapped]
-        public double Total;
+        //[NotMapped]
+        //public double Total;
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         [ValidateNever]
         public ApplicationUser applicationUser { get; set; }
+        [NotMapped]
+        public double CartTotalPrice { get; set; }
     }
 }
