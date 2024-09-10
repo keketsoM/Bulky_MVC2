@@ -4,6 +4,7 @@ using Bulky.Model.ViewModel;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace BulkyWeb.Areas.Customer.Controllers
@@ -27,7 +28,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 			shoppingCartVM = new ShoppingCartVM()
 			{
 				ShoppingCartList = _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
-				orderHeader = new OrderHeader() { }
+				orderHeader = new OrderHeader(),
 			};
 			foreach (var cartList in shoppingCartVM.ShoppingCartList)
 			{
@@ -77,7 +78,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
 			ApplicationUser applicationUser = _unitOfWork.UserRepo.Get(u => u.Id == userId);
 
-
+			shoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
 
 			foreach (var cartList in shoppingCartVM.ShoppingCartList)
 			{
@@ -100,26 +101,79 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
 			foreach (var cart in shoppingCartVM.ShoppingCartList)
 			{
-				OrderDetail orderHeader = new OrderDetail()
+				OrderDetail orderDetail = new OrderDetail()
 				{
 
-					Id = shoppingCartVM.orderHeader.Id,
+					OrderHeaderId = shoppingCartVM.orderHeader.Id,
 					ProductId = cart.ProductId,
 					Price = cart.Product.Price,
 					Count = cart.Quantity
 				};
-				_unitOfWork.OrderdetailsRepo.Add(orderHeader);
+				_unitOfWork.OrderdetailsRepo.Add(orderDetail);
 				_unitOfWork.save();
 			}
 			if (applicationUser.CompanyId.GetValueOrDefault() == 0)
 			{
 				// it is a regular customer caputre the payment
 				//stripe logic
+				var domainUrl = "https://localhost:44398/";
+				var options = new Stripe.Checkout.SessionCreateOptions
+				{
+
+					SuccessUrl = $"{domainUrl}Customer/cart/OrderConfimation?id={shoppingCartVM.orderHeader.Id}",
+					CancelUrl = $"{domainUrl}Customer/Home/Index",
+					LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+					Mode = "payment",
+				};
+
+				foreach (var item in shoppingCartVM.ShoppingCartList)
+				{
+					var sessionLineItem = new Stripe.Checkout.SessionLineItemOptions
+					{
+
+						PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
+						{
+
+							UnitAmount = (long)(item.CartTotalPrice * 100),
+							Currency = "usd",
+							ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+							{
+								Name = item.Product.Title,
+
+							},
+
+
+						},
+						Quantity = item.Quantity
+					};
+					options.LineItems.Add(sessionLineItem);
+				}
+				var service = new SessionService();
+				Session session = service.Create(options);
+				_unitOfWork.OrderheaderRepo.UpdateStripePaymentID(shoppingCartVM.orderHeader.Id, session.Id, session.PaymentIntentId);
+				_unitOfWork.save();
+				Response.Headers.Add("Location", session.Url);
+				return new StatusCodeResult(303);
 			}
 			return RedirectToAction(nameof(OrderConfimation), new { id = shoppingCartVM.orderHeader.Id });
 		}
 		public IActionResult OrderConfimation(int id)
 		{
+			var orderHeader = _unitOfWork.OrderheaderRepo.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+			if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+			{
+				var service = new SessionService();
+				Session session = service.Get(orderHeader.SessionId);
+				if (session.PaymentStatus.ToLower() == "paid")
+				{
+					_unitOfWork.OrderheaderRepo.UpdateStripePaymentID(orderHeader.Id, session.Id, session.PaymentIntentId);
+					_unitOfWork.OrderheaderRepo.UpdateStatus(orderHeader.Id, SD.StatusApproved, SD.PaymentStatusApproved);
+					_unitOfWork.save();
+				}
+			}
+			List<ShoppingCart> shoppingCartList = _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
+			_unitOfWork.ShoppingCartRepo.RemoveRange(shoppingCartList);
+			_unitOfWork.save();
 			return View(id);
 		}
 		public IActionResult Plus(int cartId)

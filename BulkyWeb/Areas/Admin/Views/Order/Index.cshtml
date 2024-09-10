@@ -1,0 +1,142 @@
+﻿@model IEnumerable<OrderHeader>
+<partial name="_Notification" />
+
+@{
+    var status = Context.Request.Query["status"];
+    var inprocess = "text-primary";
+    var paymentPending = "text-primary";
+    var completed = "text-primary";
+    var approved = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "paymentPending":
+            paymentPending = "active text-white bg-primary";
+            break;
+        case "inprocess":
+            inprocess = "active text-white bg-primary";
+            break;
+        case "completed":
+            completed = "active text-white bg-primary";
+            break;
+        case "approved":
+            approved = "active text-white bg-primary";
+            break;
+        default:
+            all = "active text-white bg-primary";
+            break;
+    }
+}
+
+<div class="card shadow border-0 mt-4 mb-5  rounded">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Order List</</h2>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="d-flex justify-content-end pb-1 pt-4 pt-2">
+        <span></span>
+        <ul class="list-group list-group-horizontal-sm">
+            <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
+                <li class="list-group-item @inprocess">In process</li>
+            </a>
+        </ul>
+        <ul class="list-group list-group-horizontal-sm">
+            <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="paymentPending">
+            <li class="list-group-item @paymentPending">Payment Pending</li>
+            </a>
+        </ul>
+        <ul class="list-group list-group-horizontal-sm">
+            <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="completed">
+            <li class="list-group-item @completed">Completed</li>
+            </a>
+        </ul>
+        <ul class="list-group list-group-horizontal-sm">
+            <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="approved">
+            <li class="list-group-item @approved">Approved</li>
+            </a>
+        </ul>
+        <ul class="list-group list-group-horizontal-sm">
+            <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="all">
+            <li class="list-group-item @all">All</li>
+            </a>
+        </ul>
+    </div>
+    <div class="card-body p-4">
+        <table class="table table-bordered table-borderless">
+            <thead>
+                <tr>
+                    <th class="text-center col-1">
+                        ID
+                    </th>
+                    <th class="text-center col-1">
+                        Name
+                    </th>
+
+                    <th class="text-center col-1">
+                        Phone number
+                    </th>
+                    <th class="text-center col-1">
+                        Email
+                    </th>
+                    <th class="text-center col-1">
+                        Status
+                    </th>
+                    <th class="text-center col-1">
+                        Total
+                    </th>
+                    <th class="text-center col-8">
+
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var orderHeader in Model.OrderBy(c => c.Name))
+                {
+
+                    <tr class="table-striped-columns">
+                        <td class="text-center">
+                            @orderHeader.Id
+                        </td>
+                        <td class="text-center">
+                            @orderHeader.Name
+                        </td>
+
+                        <td class="text-center">
+                            @orderHeader.PhoneNumber
+                        </td>
+                        <td class="text-center">
+                            @orderHeader.ApplicationUser.Email
+                        </td>
+                        <td class="text-center">
+                            @orderHeader.OrderStatus
+                        </td>
+                        <td class="text-center">
+                            @orderHeader.OrderTotal
+                        </td>
+
+                        <td>
+                            <div class=row>
+                                <div class="col-6">
+                                    <a class="btn btn-outline-primary w-100 rounded" asp-controller="Order" asp-action="Detail" asp-route-id="@orderHeader.Id" style="width:75px"><i class="bi bi-eye-fill"></i>Detail</a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="btn btn-outline-secondary w-100 rounded" asp-controller="Order" asp-action="Upsert" asp-route-id="@orderHeader.Id" style="width:75px"><i class="bi bi-pencil-square"></i>Edit</a>
+                                </div>
+                               
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
