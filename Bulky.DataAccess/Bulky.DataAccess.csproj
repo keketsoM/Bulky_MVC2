@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bulky.Model\Bulky.Model.csproj" />
+    <ProjectReference Include="..\Bulky.Utility1\Bulky.Utility.csproj" />
   </ItemGroup>
 
 </Project>

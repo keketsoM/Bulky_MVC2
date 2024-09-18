@@ -24,12 +24,12 @@ namespace BulkyWeb.Areas.Customer.Controllers
         public IActionResult Index()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            if(userId != null)
+            if (userId != null)
             {
                 HttpContext.Session.SetInt32(SD.SessionCart,
-                _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == userId).Count());
+                _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == userId.Value).Count());
             }
             var products = _unitOfWork.ProductRepo.GetAll(includeProperties: "Category").ToList();
 

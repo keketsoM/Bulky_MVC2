@@ -128,6 +128,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    _logger.LogWarning("Logged: Invalid Loggin attempt.");
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }

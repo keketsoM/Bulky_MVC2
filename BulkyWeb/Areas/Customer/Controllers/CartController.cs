@@ -170,10 +170,12 @@ namespace BulkyWeb.Areas.Customer.Controllers
                     _unitOfWork.OrderheaderRepo.UpdateStatus(orderHeader.Id, SD.StatusApproved, SD.PaymentStatusApproved);
                     _unitOfWork.save();
                 }
+                HttpContext.Session.Clear();
             }
             List<ShoppingCart> shoppingCartList = _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCartRepo.RemoveRange(shoppingCartList);
             _unitOfWork.save();
+
             return View(id);
         }
         public IActionResult Plus(int cartId)
