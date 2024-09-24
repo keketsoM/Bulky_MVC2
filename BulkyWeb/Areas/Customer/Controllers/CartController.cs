@@ -3,6 +3,7 @@ using Bulky.Model;
 using Bulky.Model.ViewModel;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Security.Claims;
@@ -16,8 +17,10 @@ namespace BulkyWeb.Areas.Customer.Controllers
         private readonly IUnitOfWork _unitOfWork;
         [BindProperty]
         public ShoppingCartVM shoppingCartVM { get; set; }
-        public CartController(IUnitOfWork unitOfWork)
+        private readonly IEmailSender _emailSender;
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
         {
+            _emailSender = emailSender;
             _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
@@ -172,6 +175,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
                 }
                 HttpContext.Session.Clear();
             }
+            _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "Order Created" + orderHeader.Id.ToString(), "Order has been submitted successfully");
             List<ShoppingCart> shoppingCartList = _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCartRepo.RemoveRange(shoppingCartList);
             _unitOfWork.save();

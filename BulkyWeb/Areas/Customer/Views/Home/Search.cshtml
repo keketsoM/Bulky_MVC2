@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Product>
+
+<div class="my-5">
+    <h1 class="mb-5">Type the Book you want to search for</h1>
+    <form method="get" asp-area="Customer" asp-controller="Home" asp-action="Search">
+        <div>
+            <input type="text" name="searchQuery" aria-label="Search" value="@ViewBag.search" class="form-control-sm" />
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </div>
+    </form>
+</div>
+
+<partial name="_HomepageImages" />
+@* <table id="tblPies" cellpadding="0" cellspacing="0">
+    <tbody></tbody>
+</table>
+
+
+@section Scripts {
+    <script>
+        // write a search functionality using api
+        $(document).ready(function () {
+            $("#searchButton").click(function () {
+                var productName = $("#txtBookName").val();
+                // console.log(productName);
+
+                // if (productName.trim() === "") {
+                //     alert("Please enter a book name.");
+                // } else {
+                //     alert("there is information." + productName);
+                // }
+                //$("tbody").html("");
+                $.ajax({
+                    url: "/api/Search/",
+                    data:"\""+ productName +"\"",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        // $.each(productName, function (i, product) {
+                        //     $("tbody").append($("<tr>"));
+                        //     appendElement = $("tbody tr").last();
+                        //     appendElement.append($("<td>").html('<img scr = ' + Pie.image  + 'width = 250 class="round m-2">');
+                        //     appendElement.append($("<td>").html('<h2><a href="/pie/details/' + product.Title + '" class="pie-link">' + product.productName + '</a></h2>'));
+                        // }
+                        
+                      
+                         $("#tblPies tbody").empty();
+                      
+                            for (var i = 0; i < data.length; i++) {
+                                 $("tbody").append($("<tr>"));
+                            appendElement = $("tbody tr").last();
+                            
+                                let home = `
+                             <div class="col-lg-3 col-sm-6">
+            <div class="row p-2">
+                <div class="col-12 p-1">
+                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                        <img src="@products.ImageUrl" class="card-img-top rounded"  /> 
+                                                           <div class="card-body pb-0">
+                                                    <div class="pl-1">
+                                                        <p class="card-title h6 text-dark opacity-75 text-uppercase text-center">${data[i].Title}</p>
+                                                        <p class="card-title text-warning text-center">by <b>${data[i].Author}</b></p>
+                                                    </div>
+                                                    <div class="pl-1">
+                                                        <p class="text-dark text-opacity-75 text-uppercase text-center mb-0">
+                                                            List Price: <span class="text-decoration-line-through">${data[i].ListPrice.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })}</span>
+                                                        </p>
+                                                   </div>
+                                                           <div class="pl-1 mb-0">
+                                                <p class=" text-dark text-opacity-75  text-uppercase text-center">
+                                                                  As low as: <span>${data[i].Price100.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' })};</span >
+                                                </p>
+                                            </div>
+                                                    </div>
+                                                            <a href="/home/detail/${data[i].Id}" class="btn btn-primary bg-gradient border-0 form-control">
+                                                                                Detail
+                                                                            </a>
+                                                                                      </div>
+                        </div>
+                    </div>
+                </div>
+
+                                                `;
+                
+                            appendElement.append($("<td>").html(`
+                                                                   < div class= "row pb-3" > ${home}</div >
+                                                                `));
+                                // $("#tblPies tbody").append("<tr><td>" + data[i].Title + "</td><td>" + data[i].Author + "</td></tr>");
+                           
+                            }
+
+                        
+                        
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr);
+                        console.log(error);
+                        alert(error+ "error");
+                    }
+                });
+            });
+        });
+    </script>
+
+} *@
+ 

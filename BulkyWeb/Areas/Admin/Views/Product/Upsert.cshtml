@@ -14,7 +14,7 @@
 
         <form method="post" class="row" enctype="multipart/form-data">
             <input asp-for="@Model.product.Id" hidden />
-            <input asp-for="@Model.product.ImageUrl" hidden />
+           @*  <input asp-for="@Model.product.ImageUrl" hidden /> *@
             <div class="row">
                 <div class="col-10">
                     <div class="border p-3">
@@ -45,9 +45,9 @@
                             <span asp-validation-for="product.Author" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
-                            <input type="file" name="file" class="form-control border-0 shadow" />
-                            <label asp-for=product.ImageUrl class="ms-2"></label>
-                            <span asp-validation-for="product.ImageUrl" class="text-danger"></span>
+                            <input type="file" name="files" class="form-control border-0 shadow" multiple />
+                          <label asp-for=product.ProductImages class="ms-2"></label>
+                            
                         </div>
                         <div class="form-floating py-2 col-12">
                             <input asp-for="product.ListPrice" class="form-control border-0 shadow" />
@@ -84,7 +84,11 @@
                     </div>
                 </div>
                 <div class="col-2">
-                    <img src="@Model.product.ImageUrl" width="100%" style="border-radius:5px; border:1px solid" />
+                   @*  @foreach(var item in Model.product.ProductImages)
+                    {
+                        <img src="@item.ImageUrl" width="100%" style="border-radius:5px; border:1px solid" />
+                    }) *@
+                 
                 </div>
             </div>
            

@@ -1,0 +1,71 @@
+﻿@model RoleManagementVM
+@{
+    var hidden = "";
+    if(Model.applicationUsers.Role == SD.Role_Company)
+    {
+        hidden = "display:block";
+    }
+    else
+    {
+        hidden = "display:none";
+    }
+}
+<div class="card shadow border-0 mt-4 rounded">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Role Management</h2>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row" enctype="multipart/form-data">
+            <input asp-for="@Model.applicationUsers.Id" hidden />
+            <div class="row">
+                <div class="col-12">
+                    <div class="border p-3">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="applicationUsers.Name" class="form-control border-0 shadow" />
+                            <label asp-for=applicationUsers.Name class="ms-2"></label>
+                            <span asp-validation-for="applicationUsers.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="applicationUsers.Role" asp-items="@Model.RolesList" class="form-select border-0 shadow"></select>
+                        </div>
+                        
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="applicationUsers.Company.Name" style="@hidden" asp-items="@Model.CompanyList" class="form-select border-0 shadow"></select>
+                        </div>
+                       
+                        <div class="row">
+                            <div class="col-6  col-md-3">
+                                <button asp-controller="Users" asp-action="RoleManagement" class="btn btn-outline-primary form-control" type="submit">Update Role</button>
+                            </div>
+                            <div class="col-6  col-md-3">
+                                <a asp-controller="Users" asp-action="index" class="btn btn-outline-secondary form-control">Back to list</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function(){
+            $("#applicationUsers_Role").change(function () {
+                var selection = $("#applicationUsers_Role Option:Selected").text();
+                if (selection == "Company") {
+                    $("#applicationUsers_Company_Name").show();
+                } else {
+                    $("#applicationUsers_Company_Name").hide();
+                }
+            })
+        })
+    </script>
+}

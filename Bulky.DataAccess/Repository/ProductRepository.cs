@@ -18,9 +18,15 @@ namespace Bulky.DataAccess.Repository
             _context = context;
 
         }
+
+        public IEnumerable<Product> SearchProduct(string searchQuery)
+        {
+            return _context.products.Where(p => p.Title.Contains(searchQuery));
+        }
+
         public void Update(Product product)
         {
-            _context.Update(product);
+            _context.products.Update(product);
         }
     }
 }

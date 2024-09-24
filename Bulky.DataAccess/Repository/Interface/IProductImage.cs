@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Bulky.DataAccess.Repository.Interface
 {
-    public interface IProduct : IRepository<Product>
+    public interface IProductImage : IRepository<ProductImage>
     {
 
-        void Update(Product product);
-        IEnumerable<Product> SearchProduct(string searchQuery);
+        void Update(ProductImage productImage);
     }
 }

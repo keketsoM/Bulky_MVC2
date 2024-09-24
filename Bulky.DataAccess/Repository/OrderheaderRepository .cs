@@ -10,47 +10,47 @@ using System.Threading.Tasks;
 
 namespace Bulky.DataAccess.Repository
 {
-	public class OrderheaderRepository : Repository<OrderHeader>, IOrderheader
-	{
-		private ApplicationDbContext _context;
-		public OrderheaderRepository(ApplicationDbContext context) : base(context)
-		{
-			_context = context;
-		}
-		public void Update(OrderHeader orderHeader)
-		{
+    public class OrderheaderRepository : Repository<OrderHeader>, IOrderheader
+    {
+        private ApplicationDbContext _context;
+        public OrderheaderRepository(ApplicationDbContext context) : base(context)
+        {
+            _context = context;
+        }
+        public void Update(OrderHeader orderHeader)
+        {
 
-			_context.Update(orderHeader);
-		}
+            _context.orderHeaders.Update(orderHeader);
+        }
 
-		public void UpdateStatus(int id, string orderstatus, string? paymentStatus = null)
-		{
-			var orderFromDb = _context.orderHeaders.FirstOrDefault(u => u.Id == id);
-			if (orderFromDb != null)
-			{
-				orderFromDb.OrderStatus = orderstatus;
-				if (!string.IsNullOrEmpty(paymentStatus))
-				{
-					orderFromDb.PaymentStatus = paymentStatus;
-				}
+        public void UpdateStatus(int id, string orderstatus, string? paymentStatus = null)
+        {
+            var orderFromDb = _context.orderHeaders.FirstOrDefault(u => u.Id == id);
+            if (orderFromDb != null)
+            {
+                orderFromDb.OrderStatus = orderstatus;
+                if (!string.IsNullOrEmpty(paymentStatus))
+                {
+                    orderFromDb.PaymentStatus = paymentStatus;
+                }
 
-			}
+            }
 
-		}
+        }
 
-		public void UpdateStripePaymentID(int id, string sessionId, string paymentIntentId)
-		{
-			var orderFromDb = _context.orderHeaders.FirstOrDefault(u => u.Id == id);
-			if (!string.IsNullOrEmpty(sessionId))
-			{
-				orderFromDb.SessionId = sessionId;
-			}
-			if (!string.IsNullOrEmpty(paymentIntentId))
-			{
-				orderFromDb.PaymentIntentId = paymentIntentId;
-				orderFromDb.PaymentDate = DateTime.Now;
-			}
+        public void UpdateStripePaymentID(int id, string sessionId, string paymentIntentId)
+        {
+            var orderFromDb = _context.orderHeaders.FirstOrDefault(u => u.Id == id);
+            if (!string.IsNullOrEmpty(sessionId))
+            {
+                orderFromDb.SessionId = sessionId;
+            }
+            if (!string.IsNullOrEmpty(paymentIntentId))
+            {
+                orderFromDb.PaymentIntentId = paymentIntentId;
+                orderFromDb.PaymentDate = DateTime.Now;
+            }
 
-		}
-	}
+        }
+    }
 }

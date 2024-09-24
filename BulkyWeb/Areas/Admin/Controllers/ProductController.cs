@@ -56,7 +56,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             //  return View(product);
         }
         [HttpPost]
-        public IActionResult Upsert(ProductVM productvm, IFormFile? file)
+        public IActionResult Upsert(ProductVM productvm, List<IFormFile>? files)
         {
             if (productvm.product.Title == null || productvm.product.Price == 0)
             {
@@ -69,24 +69,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    if (file != null)
-                    {
-                        string productName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string productPath = Path.Combine(wwwRootPath, @"images\product");
-                        if (!string.IsNullOrEmpty(productvm.product.ImageUrl))
-                        {
-                            var oldImagePath = Path.Combine(wwwRootPath, productvm.product.ImageUrl.TrimStart('\\'));
-                            if (System.IO.File.Exists(oldImagePath))
-                            {
-                                System.IO.File.Delete(oldImagePath);
-                            }
-                        }
-                        using (var fileStream = new FileStream(Path.Combine(productPath, productName), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-                        productvm.product.ImageUrl = @"\images\product\" + productName;
-                    }
+
                     if (productvm.product.Id == 0)
                     {
                         _unitOfWork.ProductRepo.Add(productvm.product);
@@ -97,6 +80,31 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     }
 
                     _unitOfWork.save();
+                    if (files != null)
+                    {
+                        foreach (var file in files)
+                        {
+                            string productName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                            string productPath = @"images\products\" + productvm.product.Id;
+                            string finalPath = Path.Combine(wwwRootPath, productPath);
+                        }
+
+
+                        //if (!string.IsNullOrEmpty(productvm.product.ImageUrl))
+                        //{
+                        //    var oldImagePath = Path.Combine(wwwRootPath, productvm.product.ImageUrl.TrimStart('\\'));
+                        //    if (System.IO.File.Exists(oldImagePath))
+                        //    {
+                        //        System.IO.File.Delete(oldImagePath);
+                        //    }
+                        //}
+                        //using (var fileStream = new FileStream(Path.Combine(productPath, productName), FileMode.Create))
+                        //{
+                        //    files.CopyTo(fileStream);
+                        //}
+                        //productvm.product.ImageUrl = @"\images\product\" + productName;
+                    }
+
                     TempData["Success"] = "Category created successfully";
                 }
                 else

@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ApplicationUser>
+<partial name="_Notification" />
+<form method="post">
+<div class="card shadow border-0 mt-4 mb-5  rounded">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Users List</</h2>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body p-4">
+        
+
+        <table class="table table-bordered table-borderless" >
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        Name
+
+                    </th>
+                    <th class="text-center">
+                        Email
+                    </th>
+
+                    <th class="text-center">
+                        Phone
+                    </th>
+
+                    <th class="text-center">
+                        Company
+                    </th>
+                    <th class="text-center">
+                        Role
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.OrderBy(c => c.Name))
+                {
+
+                    <tr class="table-striped-columns">
+                        <td class="text-center">
+                            @user.Name
+                        </td>
+                        <td class="text-center">
+                            @user.Email
+                        </td>
+
+                        <td class="text-center">
+                            @user.PhoneNumber
+                        </td>
+                       
+                        <td class="text-center">
+                            @user.Company.Name
+                        </td>
+                        <td class="text-center">
+                            @user.Role
+                        </td>
+                        <td>
+                            <div class=row>
+                                
+                                @if(user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
+                                {  
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-secondary w-100 rounded " type="submit" asp-controller="Users" asp-action="LockandUnlock" asp-route-id="@user.Id" style="width:100px"><i class="bi bi-unlock-fill"></i>Unlock </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <a class="btn btn-outline-danger w-100  rounded"  asp-controller="Users" asp-action="Permission" asp-route-id="@user.Id" style="width:100px"><i class="bi bi-trash3-fill"></i>Permission</a>
+                                    </div>
+                                }
+                                else
+                                {  
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-secondary rounded" type="submit" asp-controller="Users" asp-action="LockandUnlock" asp-route-id="@user.Id" style="width:100px"><i class="bi bi-lock-fill"></i>Lock </button>
+                                    </div>
+                                    <div class="col-6">
+                                            <a class="btn btn-outline-danger rounded"  asp-controller="Users" asp-action="RoleManagement" asp-route-id="@user.Id" style="width:150px"><i class="bi bi-trash3-fill"></i>Permission</a>
+                                    </div>
+                                }
+                             
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</form>

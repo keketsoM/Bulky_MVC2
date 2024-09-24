@@ -22,7 +22,7 @@ namespace Bulky.DataAccess.Repository
             UserRepo = new ApplicationUserRepository(_context);
             OrderheaderRepo = new OrderheaderRepository(_context);
             OrderdetailsRepo = new OrderdetailRepository(_context);
-
+            ProductImageRepo = new ProductImageRepository(_context);
         }
 
         public ICategory CategoryRepo
@@ -30,7 +30,11 @@ namespace Bulky.DataAccess.Repository
             get;
             private set;
         }
-
+        public IProductImage ProductImageRepo
+        {
+            get;
+            private set;
+        }
         public IProduct ProductRepo
         {
             get;

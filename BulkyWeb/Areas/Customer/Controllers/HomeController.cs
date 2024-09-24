@@ -83,5 +83,21 @@ namespace BulkyWeb.Areas.Customer.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet]
+        public IActionResult Search(string? searchQuery)
+        {
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var products = _unitOfWork.ProductRepo.SearchProduct(searchQuery);
+                ViewBag.search = searchQuery;
+                return View(products);
+            }
+
+
+            return View();
+
+        }
+
     }
 }
