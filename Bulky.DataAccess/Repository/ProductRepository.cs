@@ -26,6 +26,7 @@ namespace Bulky.DataAccess.Repository
 
         public void Update(Product product)
         {
+
             _context.products.Update(product);
         }
     }

@@ -31,7 +31,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
                 HttpContext.Session.SetInt32(SD.SessionCart,
                 _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == userId.Value).Count());
             }
-            var products = _unitOfWork.ProductRepo.GetAll(includeProperties: "Category").ToList();
+            var products = _unitOfWork.ProductRepo.GetAll(includeProperties: "Category,ProductImages").ToList();
 
             return View(products);
         }
@@ -40,7 +40,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
         {
             ShoppingCart shoppingCart = new ShoppingCart()
             {
-                Product = _unitOfWork.ProductRepo.Get(p => p.Id == id, includeProperties: "Category"),
+                Product = _unitOfWork.ProductRepo.Get(p => p.Id == id, includeProperties: "Category,ProductImages"),
                 Quantity = 1,
                 ProductId = id,
             };
@@ -70,12 +70,8 @@ namespace BulkyWeb.Areas.Customer.Controllers
                 _unitOfWork.ShoppingCartRepo.GetAll(u => u.ApplicationUserId == userId).Count());
             }
 
-
-
             TempData["Success"] = "Item add to Cart successfully";
             return RedirectToAction(nameof(Index));
-
-
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
