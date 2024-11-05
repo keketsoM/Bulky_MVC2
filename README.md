@@ -60,3 +60,8 @@ The application will be hosted on `https://localhost:5001` by default.
 -  Font Awesome
 - SQL Server
 -  Visual Studio 2022
+
+## Admin Login details
+- Email: keketsokeke03@gmail.com
+- Password: Katiso@1050
+
